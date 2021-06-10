@@ -1,4 +1,11 @@
-body{
-    margin: 0;
-    /*text-align: center;*/
-}
+body {
+  margin: 0;
+  font-family: sans-serif;
+  /*text-align: center;*/ }
+  body #layout-main {
+    height: 100%;
+    background-color: lightblue; }
+    body #layout-main h1 {
+      padding-left: 10px;
+      margin: 0;
+      padding-top: 20px; }
