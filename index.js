@@ -1,6 +1,10 @@
 const express=require('express');
+const env=require('./config/environment');
+const path=require('path');
+const logger=require('morgan');
 const cookieParser=require('cookie-parser');
 const app=express();
+require('./config/view-helpers')(app);
 const port=8000;
 const expressLayouts=require('express-ejs-layouts');
 const db=require('./config/mongoose');
@@ -13,22 +17,34 @@ const MongoStore=require('connect-mongodb-session')(session);
 const sassMiddleware=require('node-sass-middleware');
 const flash=require('connect-flash');
 const customMware=require('./config/middleware');
+const chatServer=require('http').Server(app);
+const chatSockets=require('./config/chat_sockets').chatSockets(chatServer);
+chatServer.listen(5000);
+console.log('chat server is listening to port 5000');
 
-app.use(sassMiddleware({
-    src:'./assets/scss',
-    dest:'./assets/css',
-    debug:true,
-    outputStyle:'extended',
-    prefix:'/css'
-}));
+if(env.name=='development'){
+    app.use(sassMiddleware({
+        src:path.join(__dirname,env.asset_path,'scss'),
+        dest:path.join(__dirname,env.asset_path,'css'),
+        debug:true,
+        outputStyle:'extended',
+        prefix:'/css'
+    }));
+}
+
 
 
 app.use(express.urlencoded());
 
 app.use(cookieParser());
 
-app.use(express.static('./assets'));
+app.use(express.static(path.join(__dirname, env.asset_path)));
+
+
+//app.use(express.static(env.asset_path));
 app.use('/uploads',express.static(__dirname+'/uploads'));
+
+app.use(logger(env.morgan.mode,env.morgan.options));
 app.use(expressLayouts);
 
 app.set('layout extractStyles',true);
@@ -40,7 +56,7 @@ app.set('views','./views');
 app.use(session({
     name:'codeial',
     //TODO change the secret before deployment in production mode.
-    secret:'blahsomething',
+    secret:env.session_cookie_key,
     saveUninitialized:false,
     resave:false,
     cookie:{
@@ -63,7 +79,6 @@ app.use(passport.setAuthenticatedUser);
 
 app.use(flash());
 app.use(customMware.setFlash);
-
 app.use('/',require('./routes'));
 
 app.listen(port,function(err){

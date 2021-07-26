@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  /*text-align: center;*/ }
+  body #layout-main {
+    height: 100%; }
+    body #layout-main h1 {
+      padding-left: 10px;
+      margin: 0;
+      padding-top: 20px; }

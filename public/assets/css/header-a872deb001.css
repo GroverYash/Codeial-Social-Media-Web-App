@@ -1,0 +1,20 @@
+header {
+  background-color: blue;
+  height: 30px;
+  display: flex; }
+  header h2 {
+    padding-top: 2px;
+    padding-left: 10px;
+    color: whitesmoke;
+    margin: 0%; }
+  header ul {
+    margin-top: 7px;
+    font-weight: bold;
+    margin-left: 70%;
+    display: flex;
+    list-style: none; }
+    header ul li {
+      margin-left: 10px; }
+      header ul li a {
+        text-decoration: none;
+        color: whitesmoke; }
